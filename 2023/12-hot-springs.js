@@ -14,7 +14,7 @@ const chars = lines.map(line => line.split(' '));
 const springLines = chars.map(line => line[0]);
 const numLines = chars.map(line => line[1].split(',').map(n => +n));
 
-// Part One
+// Old Code
 
 function brokenSpringSplits(springs) {
   return springs.split(/\.+/).filter(springs => springs.length > 0);
@@ -209,39 +209,25 @@ function constructRegex(nums) {
   return regex + '$';
 }
 
-function count(springs, nums, cache) {
-  if (springs.length === 0) return nums.length === 0 ? 1 : 0;
-  if (nums.length === 0) return springs.includes('#') ? 0 : 1;
+// Part One
 
-  const key = [springs, nums];
+function count(springs, nums) {
+  if (nums.length <= 0) return springs.includes('#') ? 0 : 1;
+  if (springs.length - nums.reduce((sum, n) => sum + n) - nums.length + 1 < 0) return 0;
 
+  const hasWorkingSpring = springs.slice(0, nums[0]).includes('.');
+  if (springs.length === nums[0]) return hasWorkingSpring ? 0 : 1;
+
+  const key = springs + ' ' + nums.join(',');
   if (cache[key]) return cache[key];
 
-  let result = 0;
-
-  if (springs[0] !== '#') {
-    const subSprings = springs.slice(1);
-    // console.log({result});
-    result += count(subSprings, nums, cache);
-  }
-
-  if (springs[0] !== '.') {
-    if (isValidGroup(springs, nums)) {
-      springs = springs.substring(nums[0] + 1);
-      const subNums = nums.slice(1);
-      nums = (subNums.length === 0 ? [] : subNums);
-      // console.log({result});
-      result += count(springs, nums, cache);
-    }
-  }
-  cache[key] = result;
-  return result;
+  // Tail-call optimization
+  return cache[key] ??= (springs[0] !== '#' ? count(trimNextPeriodSection(springs.slice(1)), nums) : 0) +
+    (!hasWorkingSpring && springs[nums[0]] !== '#' ? count(trimNextPeriodSection(springs.slice(nums[0] + 1)), nums.slice(1)) : 0);
 }
 
-function isValidGroup(springs, nums) {
-  if (springs.length < nums.reduce((sum, n) => sum + n)) return false;
-  if (springs.slice(0, nums[0]).includes('.')) return false;
-  return nums[0] == springs.length || springs[nums[0]] !== '#';
+function trimNextPeriodSection(str) {
+  return str.startsWith('.') ? str.split(/(?<=\.)(?=[^.])/).slice(1).join('') : str;
 }
 
 let answer1 = 0;
@@ -255,27 +241,16 @@ console.log({answer1});
 // Part Two
 
 const unfoldedSpringLines = springLines.map(line => Array(5).fill(line).join('?'));
-const unfoldedNumLines = numLines.map(line => Array(5).fill(line).join(',').split(',').map(n => +n));
+const unfoldedNumLines = numLines.map(line => Array(5).fill(line).flat());
 
 let answer2 = 0;
 const cache = {};
 
 for (let i = 0; i < springLines.length; i++) {
-  const [springs, nums] = parseSprings(i, part2 = true);
-  const springString = springs.join('.');
-  const subCount = count(springString, nums, cache);
+  const springString = unfoldedSpringLines[i];
+  const nums = unfoldedNumLines[i];
+  const subCount = count(springString, nums);
   answer2 += subCount;
-  console.log('line:', i + 1, 'count:', {subCount});
 }
 
 console.log({answer2});
-
-// Debugging
-
-// const [springs, nums] = parseSprings(0, part2 = true);
-// const springString = springs.join('.');
-// console.log({springs});
-// console.log({springString});
-// console.log({nums});
-// const subCount = count(springString, nums);
-// console.log({subCount});
