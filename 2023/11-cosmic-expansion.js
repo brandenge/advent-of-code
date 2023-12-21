@@ -1,4 +1,3 @@
-const exp = require('constants');
 const fs = require('fs');
 
 let data;

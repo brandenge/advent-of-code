@@ -1,5 +1,3 @@
-const { count } = require('console');
-const exp = require('constants');
 const fs = require('fs');
 
 let data;
