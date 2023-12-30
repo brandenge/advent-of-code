@@ -65,7 +65,7 @@ class Tiles {
     if (row > 0) adjacent.up = this.tiles[row - 1][col];
     if (row < this.tiles.length - 1) adjacent.down = this.tiles[row + 1][col];
     if (col > 0) adjacent.left = this.tiles[row][col - 1];
-    if (col < this.tiles.length - 1) adjacent.right = this.tiles[row][col + 1];
+    if (col < this.tiles[row].length - 1) adjacent.right = this.tiles[row][col + 1];
 
     return adjacent;
   }
