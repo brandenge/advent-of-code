@@ -7,7 +7,7 @@ try {
   console.error(err);
 }
 
-const lines = data.split('\n')
+const lines = data.split('\n');
 
 const digs = lines.map(line => {
   let [dir, meters, color] = line.split(' ');

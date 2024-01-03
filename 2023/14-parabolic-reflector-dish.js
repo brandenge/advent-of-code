@@ -7,7 +7,7 @@ try {
   console.error(err);
 }
 
-const lines = data.split('\n')
+const lines = data.split('\n');
 const chars = lines.map(line => line.split(''));
 
 // Part One
