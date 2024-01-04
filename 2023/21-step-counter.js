@@ -233,12 +233,11 @@ const tiles2 = new Tiles(chars5x);
 
 // This approach using an equation did not work
 // It was close, but there must have been a small error somewhere
-// const counts = tiles2.tileCounts();
-// const cycles = (26501365 - 65) / 131;
+const counts = tiles2.tileCounts();
+const cycles = (26501365 - 65) / 131;
 
-// const answer2 = (cycles + 1) ** 2 * counts.oddFull + cycles ** 2 * counts.evenFull - (cycles + 1) * counts.oddCorner + cycles * counts.evenCorner;
-// console.log({answer2});
-
+const answer2CloseButIncorrect = (cycles + 1) ** 2 * counts.oddFull + cycles ** 2 * counts.evenFull - (cycles + 1) * counts.oddCorner + cycles * counts.evenCorner;
+console.log({answer2CloseButIncorrect});
 
 // Using Sequences
 
